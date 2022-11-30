@@ -10,8 +10,11 @@ using Movies.Models;
 
 namespace Movies.Controllers
 {
+    //[Route("/Movies/")]
+    //[ApiController]
     public class MovieModelsController : Controller
     {
+        
         private readonly MoviesContext _context;
 
         public MovieModelsController(MoviesContext context)
