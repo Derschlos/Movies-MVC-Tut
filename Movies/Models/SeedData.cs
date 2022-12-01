@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Movies.Data;
 using System;
@@ -9,7 +10,7 @@ namespace Movies.Models
 {
     public class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void InitializeMovieData(IServiceProvider serviceProvider)
         {
             using(var context = new MoviesContext(
                 serviceProvider.GetRequiredService<DbContextOptions<MoviesContext>>()
@@ -58,6 +59,37 @@ namespace Movies.Models
                             Price = 3.99M
                         }
                     );
+                context.SaveChanges();
+            }
+        }
+
+        internal static void InitializeRolesData(IServiceProvider serviceProvider)
+        {
+            using (var context = new MoviesLoginContext(
+                serviceProvider.GetRequiredService<DbContextOptions<MoviesLoginContext>>()
+                ))
+            {
+                if (context.Roles.Any())
+                {
+                    return; //Db has been seeded
+                }
+                context.Roles.AddRange(
+                      new IdentityRole
+                      {
+                          Name = "Admin",
+                          NormalizedName = "ADMIN",
+                      },
+                      new IdentityRole
+                      {
+                          Name = "Manager",
+                          NormalizedName = "MANAGER",
+                      },
+                      new IdentityRole
+                      {
+                          Name = "User",
+                          NormalizedName = "USER",
+                      }
+                      );
                 context.SaveChanges();
             }
         }

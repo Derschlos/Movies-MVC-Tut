@@ -9,7 +9,10 @@ namespace Movies.Areas.Identity.Data;
 // Add profile data for application users by adding properties to the MoviesUser class
 public class MoviesUser : IdentityUser
 {
-
-    //public List<string> otherUsers { get; set; }
+    //public string UserName { get; set; }
 }
 
+public class Roles : IdentityRole
+{
+
+}

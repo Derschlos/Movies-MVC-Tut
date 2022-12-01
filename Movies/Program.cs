@@ -4,25 +4,35 @@ using Movies.Data;
 using Movies.Models;
 using Movies.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
+using Movies.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContext<MoviesContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MoviesContext") ?? throw new InvalidOperationException("Connection string 'MoviesContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MoviesContext") 
+    ?? throw new InvalidOperationException("Connection string 'MoviesContext' not found.")));
+
 builder.Services.AddDbContext<MoviesLoginContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MoviesLoginContextConnection") ?? throw new InvalidOperationException("Connection string 'MoviesContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MoviesLoginContextConnection") 
+    ?? throw new InvalidOperationException("Connection string 'MoviesContext' not found.")));
 
 builder.Services.AddDefaultIdentity<MoviesUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<MoviesLoginContext>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+AddScoped();
+
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    SeedData.Initialize(services);
+    SeedData.InitializeMovieData(services);
+    SeedData.InitializeRolesData(services);
 }
 
 // Configure the HTTP request pipeline.
@@ -50,3 +60,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+void AddScoped()
+{
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+}

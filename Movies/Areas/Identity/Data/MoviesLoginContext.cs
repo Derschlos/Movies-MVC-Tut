@@ -27,6 +27,6 @@ internal class MovieUsersEntityConfiguration : IEntityTypeConfiguration<MoviesUs
 {
     public void Configure(EntityTypeBuilder<MoviesUser> builder)
     {
-        //builder.Property(u => u.Name).HasMaxLength(255);
+        //builder.Property(u => u.UserName).HasMaxLength(255);
     }
 }
