@@ -47,7 +47,17 @@ namespace Movies.Controllers
         [HttpPost]
         public async Task<IActionResult> OnPostAsync(EditUserViewModel data)
         {
-            return View(data);
+            var user = _unitOfWork.User.GetUserById(data.User.Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.Email = data.User.Email;
+            user.UserName = data.User.UserName;
+            
+            _unitOfWork.User.UpdateUser(user);
+
+            return RedirectToAction("Edit", user);
         }
     }
 }

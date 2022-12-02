@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Movies.Areas.Identity.Data;
 using Movies.Data;
 using System;
 using System.Linq;
-
 
 namespace Movies.Models
 {
@@ -93,5 +93,48 @@ namespace Movies.Models
                 context.SaveChanges();
             }
         }
+
+        //internal static void InitializeUserRoles(IServiceProvider serviceProvider)
+        //{
+        //    using (var context = new MoviesLoginContext(
+        //        serviceProvider.GetRequiredService<DbContextOptions<MoviesLoginContext>>()
+        //        ))
+        //    {
+        //        if (context.UserRoles.Any())
+        //        {
+        //            return; //Db has been seeded
+        //        }
+        //        foreach (var user in context.Users)
+        //        {
+        //            Random rnd = new Random();
+        //            int roleAmount = rnd.Next(1,3);
+        //            var roleList = new List<string> { "Admin", "Manager", "User" };
+        //            context.UserRoles.AddRange(new IdentityUserRole<string>{
+        //                UserId = user.Id,
+        //                RoleId = "Admin"
+        //            });
+                         
+        //            context.UserRoles.AddRange(
+        //              new IdentityRole
+        //              {
+        //                  Name = "Admin",
+        //                  NormalizedName = "ADMIN",
+        //              },
+        //              new IdentityRole
+        //              {
+        //                  Name = "Manager",
+        //                  NormalizedName = "MANAGER",
+        //              },
+        //              new IdentityRole
+        //              {
+        //                  Name = "User",
+        //                  NormalizedName = "USER",
+        //              }
+        //              );
+        //        }
+                
+        //        context.SaveChanges();
+        //    }
+        
     }
 }

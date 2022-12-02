@@ -6,5 +6,6 @@ namespace Movies.Data
     {
         ICollection<MoviesUser> GetMoviesUsers();
         MoviesUser GetUserById(string id);
+        MoviesUser UpdateUser(MoviesUser user);
     }
 }

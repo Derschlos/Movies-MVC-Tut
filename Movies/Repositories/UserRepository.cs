@@ -21,5 +21,12 @@ namespace Movies.Repositories
         {
             return _context.Users.FirstOrDefault(u => u.Id == id);
         }
+
+        public MoviesUser UpdateUser(MoviesUser user)
+        {
+            _context.Update(user);
+            _context.SaveChanges();
+            return user;
+        }
     }
 }
