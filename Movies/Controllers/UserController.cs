@@ -47,17 +47,56 @@ namespace Movies.Controllers
         [HttpPost]
         public async Task<IActionResult> OnPostAsync(EditUserViewModel data)
         {
+            //TODO: Bind Inputs to TranferModel  to prevent overposting
+
             var user = _unitOfWork.User.GetUserById(data.User.Id);
             if (user == null)
             {
                 return NotFound();
             }
+            var userRolesInDB = await _signInManager.UserManager.GetRolesAsync(user);
+
             user.Email = data.User.Email;
             user.UserName = data.User.UserName;
-            
+
+            var rolesToAdd = new List<string>();
+            var rolesToRemove = new List<string>();
+
+            //2 DB calls in for loop has a lot of impact on DB performance
+            foreach (var role in data.Roles)
+            {
+                var assingnedInDB = userRolesInDB.FirstOrDefault(ur => ur == role.Text);
+                if (role.Selected)
+                {
+                    if (assingnedInDB == null)
+                    {
+                        //add role
+                        //await _signInManager.UserManager.AddToRoleAsync(user, role.Text);
+                        rolesToAdd.Add(role.Text);
+                    }
+                }
+                else
+                {
+                    if (assingnedInDB != null)
+                    {
+                        //remove role
+                        //await _signInManager.UserManager.RemoveFromRoleAsync(user, role.Text);
+                        rolesToRemove.Add(role.Text);
+                    }
+                }
+            }
+            if (rolesToAdd.Any())
+            {
+                await _signInManager.UserManager.AddToRolesAsync(user, rolesToAdd);
+            }
+            if (rolesToRemove.Any())
+            {
+                await _signInManager.UserManager.RemoveFromRolesAsync(user, rolesToRemove);
+            }
+
             _unitOfWork.User.UpdateUser(user);
 
-            return RedirectToAction("Edit", user);
+            return RedirectToAction("Edit", new {Id = user.Id});
         }
     }
 }
